@@ -1,0 +1,1 @@
+/work/EclipseWork/VLFEAT_ADAPTER/include/dsift-adapter.hpp
