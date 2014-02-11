@@ -19,17 +19,17 @@ using std::endl;
 #include <fstream>
 using std::ofstream;
 
-namespace jieshen
+namespace EYE
 {
   LLC_Encoder::LLC_Encoder()
-      : base_(NULL), kdforest_(NULL), has_setup_(false)
+      : base_(NULL), kdforest_model_(NULL), has_setup_(false)
   {
     init_with_default_parameter();
   }
 
   LLC_Encoder::LLC_Encoder(const shared_ptr<float>& base, const uint32_t dim,
                            const uint32_t num_base)
-      : base_(NULL), kdforest_(NULL), has_setup_(false)
+      : base_(NULL), kdforest_model_(NULL), has_setup_(false)
   {
     init_with_default_parameter();
     set_base(base, dim, num_base);
@@ -37,7 +37,7 @@ namespace jieshen
 
   LLC_Encoder::~LLC_Encoder()
   {
-    clear();
+    Clear();
   }
 
   void LLC_Encoder::set_base(const shared_ptr<float>& base, const uint32_t dim,
@@ -56,7 +56,7 @@ namespace jieshen
     has_setup_ = false;
   }
 
-  void LLC_Encoder::clear()
+  void LLC_Encoder::Clear()
   {
     init_with_default_parameter();
     clear_data();
@@ -65,14 +65,15 @@ namespace jieshen
 
   void LLC_Encoder::SetUp()
   {
-    if (kdforest_ != NULL)
-      vl_kdforest_delete(kdforest_);
+    if (kdforest_model_ != NULL)
+      vl_kdforest_delete(kdforest_model_);
 
-    kdforest_ = vl_kdforest_new(VL_TYPE_FLOAT, dim_, num_tree_, dist_method_);
+    kdforest_model_ = vl_kdforest_new(VL_TYPE_FLOAT, dim_, num_tree_,
+                                      dist_method_);
 
-    vl_kdforest_set_thresholding_method(kdforest_, thrd_method_);
-    vl_kdforest_set_max_num_comparisons(kdforest_, max_comp_);
-    vl_kdforest_build(kdforest_, num_base_, base_);
+    vl_kdforest_set_thresholding_method(kdforest_model_, thrd_method_);
+    vl_kdforest_set_max_num_comparisons(kdforest_model_, max_comp_);
+    vl_kdforest_build(kdforest_model_, num_base_, base_);
 
     has_setup_ = true;
   }
@@ -95,8 +96,8 @@ namespace jieshen
     memset(index, 0, num_knn_ * num_frame);
     float* dist(NULL);
 
-    vl_kdforest_query_with_array(kdforest_, index, num_knn_, num_frame, dist,
-                                 data);
+    vl_kdforest_query_with_array(kdforest_model_, index, num_knn_, num_frame,
+                                 dist, data);
 
     ofstream output("index.txt");
     for (uint32_t i = 0; i < num_knn_ * num_frame; ++i)
@@ -204,10 +205,10 @@ namespace jieshen
       // free(base_);
       base_ = NULL;
     }
-    if (kdforest_ != NULL)
+    if (kdforest_model_ != NULL)
     {
-      vl_kdforest_delete(kdforest_);
-      kdforest_ = NULL;
+      vl_kdforest_delete(kdforest_model_);
+      kdforest_model_ = NULL;
     }
   }
 

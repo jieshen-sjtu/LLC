@@ -13,7 +13,6 @@
 #include <fstream>
 #include <boost/shared_ptr.hpp>
 
-#include <mkl.h>
 using namespace std;
 using boost::shared_ptr;
 
@@ -68,7 +67,7 @@ int main(int argc, char* argv[])
   shared_ptr<float> X(features);
   shared_ptr<float> code;
 
-  jieshen::LLC_Encoder llc_model;
+  EYE::LLC_Encoder llc_model;
   llc_model.set_base(base, dim, num_center);
   llc_model.SetUp();
 

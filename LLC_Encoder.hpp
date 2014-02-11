@@ -13,7 +13,7 @@
 #include <vl/kdtree.h>
 #include <boost/shared_ptr.hpp>
 
-namespace jieshen
+namespace EYE
 {
   using boost::shared_ptr;
 
@@ -28,7 +28,7 @@ namespace jieshen
 
     // must call this function before encoder!!!
     void SetUp();
-    void clear();
+    void Clear();
 
   public:
     void Encoder(const shared_ptr<float>& X, const uint32_t dim,
@@ -139,7 +139,7 @@ namespace jieshen
     uint32_t num_base_;
 
     // kd-forest data
-    VlKDForest* kdforest_;
+    VlKDForest* kdforest_model_;
     VlKDTreeThresholdingMethod thrd_method_;
     VlVectorComparisonType dist_method_;
     uint32_t num_tree_;
